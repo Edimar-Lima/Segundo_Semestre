@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h> /* Para usar strlen() */
-#include <math.h>   /* Para usar pow() */
+#include <string.h>
+#include <math.h>
 
-/* Protótipos das funções */
+
 int validaNumero(char *num, int baseOrigem);
 int converteParaDecimal(char *num, int baseOrigem);
 void imprimeConvertido(int val, int baseDestino);
@@ -15,7 +15,6 @@ int main(void){
     int valorDecimal = 0;
     int numValido = 0;
 
-    /* Menu do Sistema de Origem */
     do {
         printf("--- CONVERSOR DE BASES (Com math.h e string.h) ---\n\n");
         printf("Selecione o Sistema de Origem:\n");
@@ -34,7 +33,6 @@ int main(void){
 
     system("cls");
 
-    /* Menu do Sistema de Destino */
     do {
         printf("Selecione o Sistema de Destino:\n");
         printf("[ 1 ] Binario\n");
@@ -50,13 +48,12 @@ int main(void){
         } else if (baseOrigem == baseDestino) {
             system("cls");
             printf("Erro: O sistema de destino nao pode ser igual ao de origem!\n\n");
-            baseDestino = 0; /* Reseta para forçar o loop */
+            baseDestino = 0;
         }
     } while(baseDestino < 1 || baseDestino > 3 || baseOrigem == baseDestino);
 
     system("cls");
 
-    /* Entrada e Validação do Número */
     do {
         printf("Digite o Numero de Origem: ");
         gets(numero);
@@ -69,10 +66,10 @@ int main(void){
         }
     } while(numValido == 0);
 
-    /* 1º Passo: Converter para Decimal (agora usando pow() da math.h) */
+
     valorDecimal = converteParaDecimal(numero, baseOrigem);
 
-    /* 2º Passo: Imprimir no formato de Destino */
+
     printf("\nResultado da conversao: ");
     imprimeConvertido(valorDecimal, baseDestino);
     printf("\n");
@@ -80,34 +77,33 @@ int main(void){
     return 0;
 }
 
-/* Função de validação usando strlen() da string.h */
+
 int validaNumero(char *num, int baseOrigem){
-    int tamanho = strlen(num); /* Pega o tamanho exato do texto digitado */
+    int tamanho = strlen(num);
     
     if(tamanho == 0){
         return 0;
     }
 
     for(int i = 0; i < tamanho; i++){
-        /* Padroniza para maiúsculo para facilitar a validação do Hexadecimal */
         if(num[i] >= 'a' && num[i] <= 'z'){
             num[i] = num[i] - 32; 
         }
 
         char c = num[i];
 
-        if(baseOrigem == 1){ /* Binário */
+        if(baseOrigem == 1){
             if(c != '0' && c != '1') return 0;
-        }else if(baseOrigem == 2){ /* Decimal */
+        }else if(baseOrigem == 2){
             if(c < '0' || c > '9') return 0;
-        }else if(baseOrigem == 3){ /* Hexadecimal */
+        }else if(baseOrigem == 3){
             if(!((c >= '0' && c <= '9') || (c >= 'A' && c <= 'F'))) return 0;
         }
     }
     return 1;
 }
 
-/* Converte qualquer base para Decimal usando pow() da math.h */
+
 int converteParaDecimal(char *num, int baseOrigem){
     int val = 0;
     int tamanho = strlen(num);
@@ -120,24 +116,19 @@ int converteParaDecimal(char *num, int baseOrigem){
     for(int i = 0; i < tamanho; i++){
         int digito = 0;
 
-        /* Converte o caractere para o seu valor numérico real */
         if(num[i] >= '0' && num[i] <= '9'){
             digito = num[i] - '0';
         }else if(num[i] >= 'A' && num[i] <= 'F'){
             digito = num[i] - 'A' + 10;
         }
 
-        /* Calcula o valor da posição usando potência.
-           Ex: Em "101" binário, o primeiro '1' está na posição 2 (tamanho 3 - 1 - i[que é 0]).
-           pow(2, 2) = 4. Então digito(1) * 4 = 4.
-        */
         int expoente = tamanho - 1 - i;
         val += digito * pow(multiplicador_base, expoente);
     }
     return val;
 }
 
-/* Imprime o valor Decimal na base escolhida */
+
 void imprimeConvertido(int val, int baseDestino){
     int restos[100];
     int count = 0;
@@ -147,10 +138,10 @@ void imprimeConvertido(int val, int baseDestino){
         return;
     }
 
-    if(baseDestino == 2){ /* Decimal para Decimal */
+    if(baseDestino == 2){
         printf("%i", val);
     }
-    else if(baseDestino == 1){ /* Decimal para Binário */
+    else if(baseDestino == 1){
         while(val > 0){
             restos[count] = val % 2;
             val = val / 2;
@@ -160,7 +151,7 @@ void imprimeConvertido(int val, int baseDestino){
             printf("%i", restos[i]);
         }
     }
-    else if(baseDestino == 3){ /* Decimal para Hexadecimal */
+    else if(baseDestino == 3){
         while(val > 0){
             restos[count] = val % 16;
             val = val / 16;
